@@ -17,8 +17,8 @@ find_package(catkin REQUIRED COMPONENTS
 # Messages, services and actions
 
 add_message_files( FILES
-  DiffDriveSpeeds.msg
   CustomOdometry.msg
+  Correction.msg
 )
 
 add_service_files( FILES

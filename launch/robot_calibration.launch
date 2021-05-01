@@ -2,13 +2,14 @@
 
     <!-- Robot -->
     <param name="scout/wheel" type="double" value="0.1575"/>
-    <param name="scout/reduction" type="double" value="1.0"/>
-    <param name="scout/baseline" type="double" value="1.0"/>
+    <param name="scout/reduction" type="double" value="38.2965"/>
+    <param name="scout/baseline" type="double" value="1.0375"/>
 
     <node pkg="project1" type="robot" name="scout" output="screen"/>
 
     <!-- Calibration -->
-    <param name="calib/duration" type="double" value="120.0"/>
+    <param name="calib/duration" type="double" value="60.0"/>
+    <param name="calib/forget" type="double" value="0.05"/>
 
     <node pkg="project1" type="calibration" name="calibration" output="screen"/>
 

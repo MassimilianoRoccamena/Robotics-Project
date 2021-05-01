@@ -12,11 +12,10 @@
 #include <tf/transform_broadcaster.h>
 
 #include <dynamic_reconfigure/server.h>
-#include <project1/intMethodConfig.h>
+#include <project1/IntegrationMethodConfig.h>
 
 #include <robotics_hw1/MotorSpeed.h>
 
-#include "project1/DiffDriveSpeeds.h"
 #include "project1/CustomOdometry.h"
 
 #include "project1/ResetPose.h"
@@ -85,14 +84,13 @@ class Robot
     message_filters::Subscriber<robotics_hw1::MotorSpeed> subFR, subFL, subRR, subRL;
     message_filters::Synchronizer<MotorsSyncPolicy> sync;
 
-    ros::Publisher pubWhl;
     ros::Publisher pubTws;
     ros::Publisher pubOdm;
     ros::Publisher pubCtm;
 
     tf::TransformBroadcaster brdcst;
 
-    dynamic_reconfigure::Server<project1::intMethodConfig> srvDyn;
+    dynamic_reconfigure::Server<project1::IntegrationMethodConfig> srvDyn;
 
     ros::ServiceServer srvRst, srvSet;
     
@@ -114,7 +112,7 @@ class Robot
 
     // Odometry computations ------------------------------------------------
 
-    bool intEul;
+    bool intRK;
 
     double wFR, wFL, wRR, wRL;
     double vFR, vFL, vRR, vRL;
@@ -145,7 +143,7 @@ class Robot
             ROS_INFO("(PRM) wheel radius: %.4f", wheel);
         #endif
 
-        // gb reduction param
+        // gearbox reduction param
         if (!handle.getParam("/scout/reduction", reduction))
             ROS_ERROR("reduction parameter not found");
 
@@ -164,7 +162,7 @@ class Robot
         // node state
         started = false;
 
-        // odom vars
+        // odometry vars
         pX = 0.0;
         pY = 0.0;
         aT = 0.0;
@@ -176,9 +174,8 @@ class Robot
         sync.registerCallback(boost::bind(&Robot::onMotors, this, _1, _2, _3, _4));
 
         // target pubs
-        pubWhl = handle.advertise<project1::DiffDriveSpeeds>("/scout/wheels", TARGET_QUEUE);
         pubTws = handle.advertise<geometry_msgs::TwistStamped>("/scout/twist", TARGET_QUEUE);
-        pubOdm = handle.advertise<nav_msgs::Odometry>("/scout/odom", TARGET_QUEUE);
+        pubOdm = handle.advertise<nav_msgs::Odometry>("/scout/odom/basic", TARGET_QUEUE);
         pubCtm = handle.advertise<project1::CustomOdometry>("/scout/odom/custom", TARGET_QUEUE);
 
         // dyn params bind
@@ -212,7 +209,6 @@ class Robot
             updatePose();
             updateTransform();
 
-            notifyWheels();
             notifyTwist();
             notifyOdometry();
             notifyCustomOdometry();
@@ -222,15 +218,6 @@ class Robot
 
     // Event notifiers -----------------------------------------------------
 
-    void notifyWheels()
-    {
-        project1::DiffDriveSpeeds msg;
-        msg.header.stamp.sec = t0.sec;
-        msg.header.stamp.nsec = t0.nsec;
-        msg.vR = vR * reduction;            // send speeds without gearbox
-        msg.vL = vL * reduction;
-        pubWhl.publish(msg);
-    }
     void notifyTwist()
     {
         geometry_msgs::TwistStamped msg;
@@ -268,7 +255,7 @@ class Robot
         msg.odom.pose.pose.position.y = pY;
         msg.odom.pose.pose.orientation.z = tfQ.getZ();
         msg.odom.pose.pose.orientation.w = tfQ.getW();
-        msg.method.data = intEul ? "euler" : "rk";
+        msg.method.data = intRK ? "rk" : "eul";
         pubCtm.publish(msg);
     }
     void notifyTransform()
@@ -355,8 +342,8 @@ class Robot
     }
     void updatePose()
     {
-        if (intEul) { INT_EUL(tD, pX, pY, aT, vX, wZ); }
-        else        { INT_RK(tD, pX, pY, aT, vX, wZ); }
+        if (intRK)        { INT_RK(tD, pX, pY, aT, vX, wZ); }
+        else              { INT_EUL(tD, pX, pY, aT, vX, wZ); }
 
         #ifdef LOG_POSE
             ROS_INFO("(POS) pX: %.2f, pY: %.2f, aT: %.2f", pX, pY, aT);
@@ -371,14 +358,15 @@ class Robot
 
     // Dynamic reconfigure handlers ----------------------------------------
 
-    void onIntMethod(project1::intMethodConfig &config, uint32_t level) {
-        intEul = !config.intmethod;
+    void onIntMethod(project1::IntegrationMethodConfig &config, uint32_t level) {
+        intRK = config.intMethod;
 
         #ifdef LOG_PARAMS
-            if (intEul)
-                ROS_INFO("(PRM) integration method: Euler");
-            else
+            if (intRK)
                 ROS_INFO("(PRM) integration method: Runge-Kutta");
+            else
+                ROS_INFO("(PRM) integration method: Euler");
+                
         #endif
     }
 
