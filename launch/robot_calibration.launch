@@ -1,0 +1,15 @@
+<launch>
+
+    <!-- Robot -->
+    <param name="scout/wheel" type="double" value="0.1575"/>
+    <param name="scout/reduction" type="double" value="1.0"/>
+    <param name="scout/baseline" type="double" value="1.0"/>
+
+    <node pkg="project1" type="robot" name="scout" output="screen"/>
+
+    <!-- Calibration -->
+    <param name="calib/duration" type="double" value="120.0"/>
+
+    <node pkg="project1" type="calibration" name="calibration" output="screen"/>
+
+</launch>

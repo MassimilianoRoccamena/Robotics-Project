@@ -1,0 +1,7 @@
+<launch>
+
+    <param name="calib/duration" type="double" value="120.0"/>
+
+    <node pkg="project1" type="calibration" name="calibration" output="screen"/>
+
+</launch>

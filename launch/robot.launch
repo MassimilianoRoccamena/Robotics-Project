@@ -1,0 +1,9 @@
+<launch>
+
+    <param name="scout/wheel" type="double" value="0.1575"/>
+    <param name="scout/reduction" type="double" value="38.2735"/>
+    <param name="scout/baseline" type="double" value="1.1672"/>
+
+    <node pkg="project1" type="robot" name="scout" output="screen"/>
+
+</launch>
