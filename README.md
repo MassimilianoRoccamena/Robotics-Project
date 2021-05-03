@@ -6,7 +6,7 @@ Made by Massimiliano Roccamena
 
 The aim of the project is to build an odometry computing system of a 4-wheels skid steering robot (Agilex Scout) using ROS middleware.
 
-Gearbox reduction and robot baseline parameters must be calibrated, basing on the ground truth odometry provided by the robot manufacturer.
+Gearbox reduction and apparent baseline parameters must be calibrated, basing on the ground truth odometry provided by the robot manufacturer.
 
 ## The system
 
@@ -50,7 +50,7 @@ The node parameters are:
 - /scout/baseline
   - apparent baseline of the robot
 
-(TODO)
+This node is in charge of computing the odometry (and other required functionalities) of the robot based on the system inputs, which are the 4 wheels rpm provided.
 
 ## Calibration
 
@@ -67,4 +67,13 @@ The node parameters are:
 - /calib/forget
   - parameter of the ema statistic
 
-This node compute a correction, made by some statistics (global average and exponential moving average), of some robot parameters (gearbox reduction and apparent baseline). The corrections are computed during a bag simulation for a given time, and they are a function of manufacturer and robot node odometries (linear and angular velocities). Each value composing a parameter correction is a coefficent to be used as the parameter (estimated) multiplier which minimizes robot node odometry error.
+This node compute a set of corrections, each of which is a simulation error (reported using global average and exponential moving average statistics) of the robot node parameters.
+
+The corrections are computed during a bag simulation for a given time, and they are a function of manufacturer and robot node odometries (twist fields):
+
+- Gearbox reduction coefficent
+  - k1 = V_robot / V_manufacturer = red_manufacturer / red_robot
+- Apparent baseline coefficent
+  - k2 = W_robot / W_manufacturer / k1 = red_manufacturer / red_robot * base_manufacturer / base_robot / k1 = base_manufacturer / base_robot
+
+Each value composing a parameter correction is a coefficent to be used as the parameter (estimated) multiplier which maximizes robot node odometry similarity with manufacturer one.
