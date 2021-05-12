@@ -8,7 +8,7 @@ The aim of the project is to build an odometry computing system of a 4-wheels sk
 
 Gearbox reduction and apparent baseline parameters must be calibrated, basing on the ground truth odometry provided by the robot manufacturer.
 
-## The system
+## Overview
 
 The nodes realizing the system are:
 
@@ -25,6 +25,8 @@ System architecture can be visualized in the following RQT graph
 
 ![RQT graph](./project1.png)
 
+## Requirements
+
 Required topics are:
 
 - /scout/twist
@@ -35,6 +37,8 @@ Required services are:
 
 - /scout/reset (to 0,0)
 - /scout/set
+
+Required dynamic parameter is intMethod for node robot (/scout)
 
 ## Robot
 
@@ -71,7 +75,7 @@ The node parameters are:
 This node compute a set of corrections, each of which is an error indicator of a robot node parameter; each correction is realized by the following set of statistics of the indicator:
 
 - global average
-- exponential moving average
+- exponential moving average (used for visualization of instantaneous values, with high frequencies filtered)
 
 The error indicators are computed for a given time with respect to a bag and robot node simulation, and they are a function of manufacturer and robot node odometries (twist fields):
 

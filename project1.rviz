@@ -117,7 +117,7 @@ Visualization Manager:
         Shaft Length: 1
         Shaft Radius: 0.05000000074505806
         Value: Arrow
-      Topic: /scout/odom
+      Topic: /scout/odom/basic
       Unreliable: false
       Value: true
     - Class: rviz/TF
@@ -125,13 +125,19 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        base_link:
+          Value: true
+        odom:
+          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        {}
+        odom:
+          base_link:
+            {}
       Update Interval: 0
       Value: true
   Enabled: true
