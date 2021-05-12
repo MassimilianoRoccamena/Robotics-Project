@@ -15,7 +15,7 @@
 
 #define LOG_PARAMS
 //#define LOG_TIME
-#define LOG_CALIB
+//#define LOG_CALIB
 #define LOG_RESULT
 
 // Queues -------------------------------------------------------------------

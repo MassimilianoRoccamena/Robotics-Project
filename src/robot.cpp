@@ -366,7 +366,6 @@ class Robot
                 ROS_INFO("(PRM) integration method: Runge-Kutta");
             else
                 ROS_INFO("(PRM) integration method: Euler");
-                
         #endif
     }
 
@@ -377,8 +376,13 @@ class Robot
         pX = 0.0;
         pY = 0.0;
         aT = 0.0;
+
         updateTransform();
+
+        notifyOdometry();
+        notifyCustomOdometry();
         notifyTransform();
+
         return true;
     }
     bool setPose(project1::SetPose::Request &req, project1::SetPose::Response &res)
@@ -386,8 +390,13 @@ class Robot
         pX = req.x;
         pY = req.y;
         aT = req.theta;
+
         updateTransform();
+
+        notifyOdometry();
+        notifyCustomOdometry();
         notifyTransform();
+
         return true;
     }
 };

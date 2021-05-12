@@ -28,11 +28,12 @@ System architecture can be visualized in the following RQT graph
 Required topics are:
 
 - /scout/twist
-- /scout/odom/custom
+- /scout/odom/basic
+- /scout/odom/custom (with integration method)
 
 Required services are:
 
-- /scout/reset
+- /scout/reset (to 0,0)
 - /scout/set
 
 ## Robot
@@ -50,7 +51,7 @@ The node parameters are:
 - /scout/baseline
   - apparent baseline of the robot
 
-This node is in charge of computing the odometry (and other required functionalities) of the robot based on the system inputs, which are the 4 wheels rpm provided.
+This node is in charge of computing the odometry (and other required functionalities) of the robot based on the system inputs, which are the 4 wheels rpms provided; the odometry can be computed using Euler and Runge-Kutta integration methods.
 
 ## Calibration
 
@@ -67,13 +68,16 @@ The node parameters are:
 - /calib/forget
   - parameter of the ema statistic
 
-This node compute a set of corrections, each of which is a simulation error (reported using global average and exponential moving average statistics) of the robot node parameters.
+This node compute a set of corrections, each of which is an error indicator of a robot node parameter; each correction is realized by the following set of statistics of the indicator:
 
-The corrections are computed during a bag simulation for a given time, and they are a function of manufacturer and robot node odometries (twist fields):
+- global average
+- exponential moving average
+
+The error indicators are computed for a given time with respect to a bag and robot node simulation, and they are a function of manufacturer and robot node odometries (twist fields):
 
 - Gearbox reduction coefficent
-  - k1 = V_robot / V_manufacturer = red_manufacturer / red_robot
+  - k1 = V_robot / V_manufacturer = reduction_manufacturer / reduction_robot
 - Apparent baseline coefficent
-  - k2 = W_robot / W_manufacturer / k1 = red_manufacturer / red_robot * base_manufacturer / base_robot / k1 = base_manufacturer / base_robot
+  - k2 = W_robot / W_manufacturer / k1 = reduction_manufacturer / reduction_robot * baseline_manufacturer / baseline_robot / k1 = base_manufacturer / base_robot
 
-Each value composing a parameter correction is a coefficent to be used as the parameter (estimated) multiplier which maximizes robot node odometry similarity with manufacturer one.
+Each indicator is a coefficent to be used as the parameter (estimated) multiplier which maximizes robot node odometry similarity with manufacturer one.
