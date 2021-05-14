@@ -25,6 +25,8 @@ System architecture can be visualized in the following RQT graph
 
 ![RQT graph](./project1.png)
 
+The messaging /scout_odom -> /scout has been dotted to highlight that the node only listens for one message than it shutdowns the subscriber (pose init).
+
 ## Requirements
 
 Required topics are:
@@ -55,7 +57,9 @@ The node parameters are:
 - /scout/baseline
   - apparent baseline of the robot
 
-This node is in charge of computing the odometry (and other required functionalities) of the robot based on the system inputs, which are the 4 wheels rpms provided; the odometry can be computed using Euler and Runge-Kutta integration methods.
+The node initializes the pose of the robot with the bag by listening for the first odometry message published.
+
+It is also is in charge of computing the odometry (and other required functionalities) of the robot based on the system inputs, which are the 4 wheels rpms provided; the odometry can be computed using Euler and Runge-Kutta integration methods.
 
 ## Calibration
 
