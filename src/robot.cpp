@@ -255,7 +255,7 @@ class Robot
         msg.odom.pose.pose.position.y = pY;
         msg.odom.pose.pose.orientation.z = tfQ.getZ();
         msg.odom.pose.pose.orientation.w = tfQ.getW();
-        msg.method.data = intRK ? "rk" : "eul";
+        msg.method.data = intRK ? "rk" : "euler";
         pubCtm.publish(msg);
     }
     void notifyTransform()
