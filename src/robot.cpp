@@ -32,6 +32,7 @@
 
 // Queues -------------------------------------------------------------------
 
+#define ODOM_QUEUE      1
 #define MOTOR_QUEUE     20
 #define SYNC_QUEUE      20
 #define TARGET_QUEUE    20
@@ -49,7 +50,7 @@ typedef message_filters::sync_policies
 #define NODE_NAME       "scout"
 
 #define PARENT_FRAME    "odom"
-#define CHILD_FRAME     "base_link"
+#define CHILD_FRAME     "robot"
 
 // Calculus -----------------------------------------------------------------
 
@@ -81,6 +82,7 @@ class Robot
 
     ros::NodeHandle handle;
 
+    ros::Subscriber subOdm;
     message_filters::Subscriber<robotics_hw1::MotorSpeed> subFR, subFL, subRR, subRL;
     message_filters::Synchronizer<MotorsSyncPolicy> sync;
 
@@ -170,6 +172,9 @@ class Robot
         updateTransform();
         notifyTransform();
 
+        // subs
+        subOdm = handle.subscribe("/scout_odom", ODOM_QUEUE, &Robot::onInitPose, this);
+
         // synchro subs
         sync.registerCallback(boost::bind(&Robot::onMotors, this, _1, _2, _3, _4));
 
@@ -188,6 +193,18 @@ class Robot
 
     // Event handlers -------------------------------------------------------
 
+    void onInitPose(const nav_msgs::Odometry::ConstPtr& odm)
+    {
+        pX = odm->pose.pose.position.x;
+        pY = odm->pose.pose.position.y;
+        aT = tf::getYaw(odm->pose.pose.orientation);
+
+        #ifdef LOG_POSE
+            ROS_INFO("(POS) init at pX: %.2f, pY: %.2f, aT: %.2f", pX, pY, aT);
+        #endif
+
+        subOdm.shutdown();
+    }
     void onMotors(const robotics_hw1::MotorSpeed::ConstPtr& fr, 
                   const robotics_hw1::MotorSpeed::ConstPtr& fl,
                   const robotics_hw1::MotorSpeed::ConstPtr& rr,

@@ -2,7 +2,7 @@
 
     <param name="scout/wheel" type="double" value="0.1575"/>
     <param name="scout/reduction" type="double" value="38.2965"/>
-    <param name="scout/baseline" type="double" value="1.0375"/>
+    <param name="scout/baseline" type="double" value="1.0329"/>
 
     <node pkg="project1" type="robot" name="scout" output="screen"/>
 
