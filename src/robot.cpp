@@ -284,19 +284,20 @@ class Robot
 
     bool updateTime(ros::Time tFR, ros::Time tFL, ros::Time tRR, ros::Time tRL)
     {
-        // time = avg(approx sync events times)
+        // curr time = avg(approx sync events times)
         double t = (tFR.toSec() + tFL.toSec() + tRR.toSec() + tRL.toSec()) / 4.0;
         ros::Time t1(t);
 
         // first update
         if (!started) {
 
-            // init time
+            // set curr time
             t0.sec = t1.sec;
             t0.nsec = t1.nsec;
 
             // start
             started = true;
+
             // skip computations
             return false;
         }
@@ -304,6 +305,7 @@ class Robot
         // delta time
         tD = t1.toSec() - t0.toSec();
 
+        // shift curr time
         t0.sec = t1.sec;
         t0.nsec = t1.nsec;
 

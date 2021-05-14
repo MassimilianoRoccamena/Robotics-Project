@@ -70,7 +70,7 @@ class Calibration
 
     // Time -----------------------------------------------------------------
 
-    ros::Time t0;
+    ros::Time t0, t1;
     double tE;
 
     // Corrections computations ---------------------------------------------
@@ -166,7 +166,8 @@ class Calibration
     void notifyReduction()
     {
         project1::Correction msg;
-        msg.header.stamp = ros::Time::now();
+        msg.header.stamp.sec = t1.sec;
+        msg.header.stamp.nsec = t1.nsec;
         msg.avg = avgGbr;
         msg.ema = emaGbr;
         pubGbr.publish(msg);
@@ -174,7 +175,8 @@ class Calibration
     void notifyBaseline()
     {
         project1::Correction msg;
-        msg.header.stamp = ros::Time::now();
+        msg.header.stamp.sec = t1.sec;
+        msg.header.stamp.nsec = t1.nsec;
         msg.avg = avgBln;
         msg.ema = emaBln;
         pubBln.publish(msg);
@@ -187,25 +189,28 @@ class Calibration
         // skip if stopped
         if (!running) return false;
 
-        // time = avg(approx sync events times)
+        // curr time = avg(approx sync events times)
         double t = (tPrj.toSec() + tMnf.toSec()) / 2.0;
-        ros::Time t1(t);
+        ros::Time tt(t);
+        t1.sec = tt.sec;
+        t1.nsec = tt.nsec;
 
         // first update
         if (!started) {
 
-            // init time
+            // set start time
             t0.sec = t1.sec;
             t0.nsec = t1.nsec;
 
             // start
             started = true;
+
             // skip computations
             return false;
         }
 
         // elapsed time
-        tE = t1.toSec() - t0.toSec();
+        tE = t - t0.toSec();
 
         #ifdef LOG_TIME
             ROS_INFO("(TIM) tE: %.2f", tE);
