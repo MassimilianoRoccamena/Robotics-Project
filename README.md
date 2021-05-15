@@ -1,6 +1,8 @@
 # Robotics-Project
 
-Made by Massimiliano Roccamena
+Name: Massimiliano Roccamena
+
+Person Code: 10499005
 
 ## Introduction
 
@@ -25,9 +27,13 @@ System architecture can be visualized in the following RQT graph
 
 ![RQT graph](./project1.png)
 
-The messaging /scout_odom -> /scout has been dotted to highlight that the node only listens for one message than it shutdowns the subscriber (pose init).
-
 ## Requirements
+
+Required parameters are:
+
+- /scout/start/x
+- /scout/start/y
+- /scout/start/theta
 
 Required topics are:
 
@@ -37,10 +43,15 @@ Required topics are:
 
 Required services are:
 
-- /scout/reset (to 0,0)
-- /scout/set
+- /scout/reset
+- /scout/set (parametric)
 
-Required dynamic parameter is intMethod for node robot (/scout)
+The TF tree is made by the frames:
+
+- odom (root), fixed global frame inside rviz file provided in order to visualize manufacturer and project odometries in the same time
+- robot (odom child, project odometry frameS)
+
+Required dynamic parameter is intMethod for node robot (/scout).
 
 ## Robot
 
@@ -52,14 +63,20 @@ roslaunch project1 robot.launch
 
 The node parameters are:
 
+- /scout/wheel
+  - wheels radius
 - /scout/reduction
   - gearbox reduction of the wheels
 - /scout/baseline
   - apparent baseline of the robot
+- /scout/start/x
+  - starting x position
+- /scout/start/y
+  - starting y position
+- /scout/start/theta
+  - starting yaw orientation
 
-The node initializes the pose of the robot with the bag by listening for the first odometry message published.
-
-It is also is in charge of computing the odometry (and other required functionalities) of the robot based on the system inputs, which are the 4 wheels rpms provided; the odometry can be computed using Euler and Runge-Kutta integration methods.
+The node is in charge of computing the odometry (and other required functionalities) of the robot based on the system inputs, which are the 4 wheels rpms provided; the odometry can be computed using Euler and Runge-Kutta integration methods.
 
 ## Calibration
 

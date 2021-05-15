@@ -4,6 +4,10 @@
     <param name="scout/reduction" type="double" value="38.2965"/>
     <param name="scout/baseline" type="double" value="1.0329"/>
 
+    <param name="scout/start/x" type="double" value="0.0"/>
+    <param name="scout/start/y" type="double" value="0.0"/>
+    <param name="scout/start/theta" type="double" value="0.0"/>
+
     <node pkg="project1" type="robot" name="scout" output="screen"/>
 
 </launch>
