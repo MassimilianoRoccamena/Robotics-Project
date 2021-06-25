@@ -22,7 +22,7 @@ The basic components of the system are:
 Mapping system can be launched by running:
 
 ```bash
-roslaunch project1 scout_mapping.launch
+roslaunch project2 scout_mapping.launch
 ```
 
 Here are plotted the RQT graph and TF tee:
@@ -33,7 +33,7 @@ Here are plotted the RQT graph and TF tee:
 Localization system can be launched by running
 
 ```bash
-roslaunch project1 scout_localization.launch
+roslaunch project2 scout_localization.launch
 ```
 
 Here are plotted the RQT graph and TF tee:
