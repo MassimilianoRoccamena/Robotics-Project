@@ -21,6 +21,7 @@
         <param name="transform_timeout"         value="0.0"/>
         
         <param name="odom0"                     value="$(arg odom0_topic)"/>
+        <param name="odom1"                     value="$(arg odom1_topic)"/>
         <param name="imu0"                      value="$(arg imu0_topic)"/>
 
         <rosparam param="odom0_config">[true, true, false,
