@@ -1,8 +1,0 @@
-<launch>
-
-    <param name="calib/duration" type="double" value="60.0"/>
-    <param name="calib/forget" type="double" value="0.1"/>
-
-    <node pkg="project1" type="calibration" name="calibration" output="screen"/>
-
-</launch>
