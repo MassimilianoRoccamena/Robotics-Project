@@ -1,0 +1,18 @@
+<launch>
+    <arg name="scan_topic"  default="/scan" />
+    
+    <arg name="map_frame"   default="map"/>
+    <arg name="odom_frame"  default="odom"/>
+    <arg name="base_frame"  default="base_link"/>
+
+    <arg name="laser_a_z"   default="0.8660266"/>
+    <arg name="laser_a_w"   default="0.4999979"/>
+
+    <node pkg="tf" type="static_transform_publisher" name="world_tf" args="0 0 0 0 0 0 1 world $(arg map_frame) 100" />
+    <node pkg="tf" type="static_transform_publisher" name="scout_odom_tf" args="0 0 0 0 0 0 1 $(arg map_frame) scout/odom 100" />
+    <node pkg="tf" type="static_transform_publisher" name="camera_odom_tf" args="0 0 0 0 0 0 1 $(arg map_frame) camera_odom_frame 100" />
+    <node pkg="tf" type="static_transform_publisher" name="laser_tf" args="0 0 0 0 0 $(arg laser_a_z) $(arg laser_a_w) $(arg base_frame) laser 100" />
+
+    <node pkg="project2" type="fix_scout_odom" name="fix_scout_odom" />
+    <node pkg="project2" type="fix_camera_odom" name="fix_camera_odom" />
+</launch>

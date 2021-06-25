@@ -1,0 +1,10 @@
+<launch>
+    <param name="/use_sim_time" value="true" />
+
+    <include file="$(find project2)/launch/fix.launch" />
+
+    <include file="$(find project2)/launch/filtering.launch" />
+    <include file="$(find project2)/launch/mapping.launch" />
+
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find project2)/rviz/mapping.rviz" />
+</launch>

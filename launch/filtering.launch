@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find project2)/launch/imu_filter.launch" />
+    <include file="$(find project2)/launch/sensor_fusion.launch" />
+</launch>
