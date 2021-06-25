@@ -56,16 +56,22 @@ Filtering of raw IMU data
 
 ## sensor_fusion
 
-Here we fuse all our sensors (robot odometry, visual odometry, IMU) for odometry filtering with robot_localization EKF node; to avoid oscillations of pose (positions and angle) only scout odometry is involved in position estimation, and only IMU is involved in angle estimation; in this way visual odometry can be joined in the filter in differential mode in all odometry variables.
+Here we fuse all our sensors (robot odometry, visual odometry, IMU) and create an odometry filter with robot_localization EKF node; to avoid oscillations of pose (positions and angle) only scout odometry is involved in position estimation, and only IMU is involved in angle estimation; in this way visual odometry can be joined in the filter in differential mode in all odometry variables.
 
 ## filtering
 
-Execution of IMU filtering and sensor fusion
+Execution of IMU filtering and sensor fusion.
 
 ## mapping
 
-Basic mapping system based on gmapping laser scan SLAM, with filtered odometry
+Basic mapping system based on gmapping laser scan SLAM.
 
 ## localization
 
-Basic Monte Carlo localization based on amcl, with filtered odometry
+Basic Monte Carlo localization based on amcl.
+
+! ATTENTION ! loading of the map is commented because for some reason on my machine map_server fail to load any map from launch file; either try to uncomment this or load manually the map (map1 in /maps path is created from bag1).
+
+## scout_mapping / scout_localization
+
+Mapping / localization systems with fixed TFs and filtered odometries.
